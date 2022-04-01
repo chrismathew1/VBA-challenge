@@ -70,7 +70,11 @@ Sub Ticker()
                 
             End If
                 
+            ' Formatting yearly change decimal
+            Range("J" & Ticker_Symbol_Row).NumberFormat = "0.00"
             
+            ' Formatting percent change decimal and percent symbol
+            Range("K" & Ticker_Symbol_Row).NumberFormat = "0.00\%"
             
             ' Add one to the output table row
             Ticker_Symbol_Row = Ticker_Symbol_Row + 1
