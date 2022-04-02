@@ -1,13 +1,13 @@
 Attribute VB_Name = "Module1"
-Sub Ticker()
-    ' Variable holds number of sheets
+Sub Analysis()
+    ' BONUS: Variable holds number of sheets
     Dim Sheet_Count As Integer
     
     Sheet_Count = ThisWorkbook.Worksheets.Count
     
     For j = 1 To Sheet_Count
         
-        ' Selects current worksheet
+        ' BONUS: Selects current worksheet
         Worksheets(j).Select
         
         ' Headers
@@ -38,6 +38,19 @@ Sub Ticker()
         Dim Ticker_Symbol_Row As Integer
         Ticker_Symbol_Row = 2
         
+        ' BONUS: Variables to hold the Greatest % Increase, Greatest % Decrease, and Greatest Total Volume
+        Dim Greatest_Percent_Increase As Double
+        Greatest_Percent_Increase = 0
+        Dim Greatest_Percent_Decrease As Double
+        Greatest_Percent_Decrease = 0
+        Dim Greatest_Total_Volume As Double
+        Greatest_Total_Volume = 0
+        
+        ' BONUS: Variables to hold previous ticker symbols
+        Dim GPI As String
+        Dim GPD As String
+        Dim GTV As String
+        
         ' Loop through all rows of stock's opening and closing information
         For i = 2 To ActiveSheet.UsedRange.Rows.Count
         
@@ -47,6 +60,7 @@ Sub Ticker()
                 ' Set the ticker symbol
                 Ticker_Symbol = Cells(i, 1).Value
                 
+                
                 ' Calculates yearly change
                 Closing_Value = Cells(i, 6).Value
                 Yearly_Change = Closing_Value - Opening_Value
@@ -54,8 +68,26 @@ Sub Ticker()
                 'Calculated percent change
                 Percent_Change = (Yearly_Change / Opening_Value) * 100
                 
+                ' BONUS: Checking for Greatest % Increase and % Decrease
+                If Percent_Change > Greatest_Percent_Increase Then
+                    GPI = Ticker_Symbol
+                    Greatest_Percent_Increase = Percent_Change
+                End If
+                
+                If Percent_Change <= Greatest_Percent_Decrease Then
+                    GPD = Ticker_Symbol
+                    Greatest_Percent_Decrease = Percent_Change
+                End If
+                
+                
                 ' Add to the total stock volume
                 Total_Stock_Volume = Total_Stock_Volume + Cells(i, 7).Value
+                
+                ' BONUS: Checking for Greatest Total Volume
+                If Total_Stock_Volume >= Greatest_Total_Volume Then
+                    GTV = Ticker_Symbol
+                    Greatest_Total_Volume = Total_Stock_Volume
+                End If
                 
                 ' Print the ticker symbol to the output table
                 Range("I" & Ticker_Symbol_Row).Value = Ticker_Symbol
@@ -104,6 +136,28 @@ Sub Ticker()
             End If
             
         Next i
+        
+        ' BONUS: Printing bonus table row headers
+        Range("O" & 2).Value = "Greatest % Increase"
+        Range("O" & 3).Value = "Greatest % Decrease"
+        Range("O" & 4).Value = "Greatest Total Volume"
+        
+        ' BONUS: Printing bonus table column headers
+        Range("P" & 1).Value = "Ticker"
+        Range("Q" & 1).Value = "Value"
+        
+        ' BONUS: Printing bonus table tickers and values
+        Range("P" & 2).Value = GPI
+        Range("P" & 3).Value = GPD
+        Range("P" & 4).Value = GTV
+        
+        Range("Q" & 2).Value = Greatest_Percent_Increase
+        Range("Q" & 2).NumberFormat = "0.00\%"
+        Range("Q" & 3).Value = Greatest_Percent_Decrease
+        Range("Q" & 3).NumberFormat = "0.00\%"
+        Range("Q" & 4).Value = Greatest_Total_Volume
+        
+        
     Next j
 
 End Sub
